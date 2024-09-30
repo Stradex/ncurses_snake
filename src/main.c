@@ -43,6 +43,29 @@ void draw_gui()
 	//draw_element(&p);	
 }
 
+bool game_frame(int ch, bool game_over) {
+	if (ch == 'q') {
+		return false;
+	}
+	if (!game_over) {	
+		game_over = !handleInput(ch);
+		tryToSpawnFruit();
+	}
+	clear();
+	if (game_over) {
+		displayGameOverScreen();
+	} else {
+		drawPlayer();
+		if (fruit) {
+			mvaddch(fruit->pos.y, fruit->pos.x, fruit->ch | COLOR_PAIR(FRUIT_COLOR));
+		}
+		displayGameBorders();
+
+		draw_gui();
+	}
+	return true;
+}
+
 int main(void)
 {
 	int ch;
@@ -58,28 +81,10 @@ int main(void)
 	player = createPlayer(getCenter(game_size));
 	drawPlayer();	
 	bool game_over = false;
-	while (ch = getch()) 
+	do
 	{
-		if (ch == 'q') {
-			break;
-		}
-		if (!game_over) {	
-			game_over = !handleInput(ch);
-			tryToSpawnFruit();
-		}
-		clear();
-		if (game_over) {
-			displayGameOverScreen();
-		} else {
-			drawPlayer();
-			if (fruit) {
-				mvaddch(fruit->pos.y, fruit->pos.x, fruit->ch | COLOR_PAIR(FRUIT_COLOR));
-			}
-			displayGameBorders();
-
-			draw_gui();
-		}
-	}
+		ch = getch();
+	} while (game_frame(ch, game_over));
 
 	endwin();
 
