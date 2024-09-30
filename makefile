@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -lncurses -I./include/
-SOURCES = ./src/*.c
+CFLAGS = -Wall -lncurses -I./include/
+SOURCES = ./src/*.c 
 
 all: compile run clean
 
