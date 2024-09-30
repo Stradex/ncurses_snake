@@ -40,8 +40,7 @@ void draw_gui()
 {
 	Point p = create_point(4, 5, '%');
 	Box b = create_box(4, 5, 7, 7, '$');
-	draw_box(b);	
-
+	//draw_element(&p);	
 }
 
 int main(void)

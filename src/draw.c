@@ -11,29 +11,43 @@ void init_colors()
 	}
 }
 
-void draw_point(Point p)
+void draw_point(Point* p)
 {
-	if (!p.visible) {
+	if (!p->visible) {
 		return;
 	}
-	mvaddch(p.pos.y, p.pos.x, p.ch | COLOR_PAIR(p.color));
+	mvaddch(p->pos.y, p->pos.x, p->ch | COLOR_PAIR(p->color));
 }
 
-void draw_box(Box b)
+void draw_box(Box* b)
 {
-	if (!b.visible) {
+	if (!b->visible) {
 		return;
 	}
-	Position box_start_pos = b.rect.start;
-	Position box_end_pos = getRectangleEnd(b.rect);
+	Position box_start_pos = b->rect.start;
+	Position box_end_pos = getRectangleEnd(b->rect);
 	for (int i=box_start_pos.x; i <= box_end_pos.x; i++) {
 		for (int j=box_start_pos.y; j <= box_end_pos.y; j++) {
-			if (!b.filled && i != box_start_pos.x && i != box_end_pos.x && j != box_start_pos.y && j != box_end_pos.y) {
+			if (!b->filled && i != box_start_pos.x && i != box_end_pos.x && j != box_start_pos.y && j != box_end_pos.y) {
 				continue;
 			}
-			mvaddch(j, i, b.ch | COLOR_PAIR(b.color));
+			mvaddch(j, i, b->ch | COLOR_PAIR(b->color));
 		
 		}
+	}
+}
+
+void draw_element(void* element)
+{
+	Figure *figure = (Figure *)element;
+
+	switch (figure->type) {
+		case POINT:
+			return draw_point((Point*)element);
+		break;
+		case RECTANGLE:
+			return draw_box((Box*)element);
+		break;
 	}
 }
 
@@ -41,6 +55,7 @@ Point create_point(int x, int y, int ch)
 {
 	Position pos = {x, y};
 	Point p;
+	p.type = POINT;
 	p.pos = pos;
 	p.ch = ch;
 	p.visible = true;
@@ -52,6 +67,7 @@ Box create_box(int x, int y, int width, int height, int ch)
 {
 	Rectangle rect = {{x, y}, {width, height}};
 	Box b;
+	b.type = RECTANGLE;
 	b.rect = rect;
 	b.ch = ch;
 	b.visible = true;

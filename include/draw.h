@@ -9,8 +9,19 @@
 #define SNAKE_COLOR	2
 #define WALL_COLOR	3
 
+typedef enum {
+    POINT,
+    RECTANGLE
+} FigureType;
+
+// Helper struct so I can cast to Figure when dealing with Point, Rectangle, etc...
+typedef struct {
+    FigureType type;
+} Figure;
+
 typedef struct 
 {
+	FigureType type;
 	Position pos;
 	int color;
 	bool visible;
@@ -19,12 +30,12 @@ typedef struct
 
 typedef struct
 {
+	FigureType type;
 	Rectangle rect;
 	int color;
 	bool visible;
 	bool filled;
 	int ch;
-
 } Box;
 
 //TO DO:
@@ -35,9 +46,9 @@ typedef struct
 Point create_point(int x, int y, int ch);
 Box create_box(int x, int y, int width, int height, int ch);
 
-
 void init_colors();
-void draw_point(Point p);
-void draw_box(Box b);
+void draw_point(Point* p);
+void draw_box(Box* b);
+void draw_element(void *);
 
 #endif
